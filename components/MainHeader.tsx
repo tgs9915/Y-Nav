@@ -121,22 +121,20 @@ const MainHeader: React.FC<MainHeaderProps> = ({
         <div className="flex items-center gap-1 bg-slate-200/60 dark:bg-slate-800/70 rounded-md p-1">
           <button
             onClick={() => onSearchModeChange('internal')}
-            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
-              searchMode === 'internal'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
-            }`}
+            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${searchMode === 'internal'
+              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
+              }`}
             title="站内搜索"
           >
             站内
           </button>
           <button
             onClick={() => onSearchModeChange('external')}
-            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
-              searchMode === 'external'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
-            }`}
+            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${searchMode === 'external'
+              ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
+              }`}
             title="站外搜索"
           >
             站外
@@ -216,11 +214,6 @@ const MainHeader: React.FC<MainHeaderProps> = ({
           <button onClick={onOpenSidebar} className="lg:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300">
             <Menu size={20} />
           </button>
-          <div className="flex items-center font-mono font-bold text-lg cursor-pointer select-none group" title={navTitleText}>
-            <span className="text-blue-400 mr-2">~/</span>
-            <span className="text-slate-200 tracking-tight">Y-Nav</span>
-            <span className="w-2 h-5 bg-emerald-500 ml-1 animate-pulse"></span>
-          </div>
         </div>
 
         <div className="flex-1 hidden md:flex justify-center">
@@ -229,7 +222,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({
           </div>
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-4">
           <button
             onClick={onToggleMobileSearch}
             className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100/70 dark:hover:bg-slate-900/60"
@@ -237,25 +230,24 @@ const MainHeader: React.FC<MainHeaderProps> = ({
           >
             <Search size={18} />
           </button>
+
           <div className="hidden sm:flex items-center gap-1 bg-slate-100/70 dark:bg-slate-900/60 rounded-lg p-1">
             <button
               onClick={() => onViewModeChange('simple')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
-                siteCardStyle === 'simple'
-                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
-              }`}
+              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${siteCardStyle === 'simple'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
+                }`}
               title="简约版视图"
             >
               简约
             </button>
             <button
               onClick={() => onViewModeChange('detailed')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
-                siteCardStyle === 'detailed'
-                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
-              }`}
+              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${siteCardStyle === 'detailed'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
+                }`}
               title="详情版视图"
             >
               详情

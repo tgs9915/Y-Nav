@@ -48,9 +48,17 @@ const Sidebar: React.FC<SidebarProps> = ({
     >
       <div className={`h-14 flex items-center border-b border-slate-100/80 dark:border-white/10 shrink-0 relative ${isSidebarCollapsed ? 'justify-center px-2' : 'px-4'}`}>
         <div className={`flex items-center ${isSidebarCollapsed ? '' : 'gap-2'}`}>
-          <div className="h-7 w-7 rounded-lg bg-slate-100/70 dark:bg-slate-800/70 border border-slate-200/70 dark:border-white/10 flex items-center justify-center text-xs font-mono text-slate-500 dark:text-slate-300">
-            Y
-          </div>
+          {isSidebarCollapsed ? (
+            <div className="h-7 w-7 rounded-lg bg-slate-100/70 dark:bg-slate-800/70 border border-slate-200/70 dark:border-white/10 flex items-center justify-center text-xs font-mono text-slate-500 dark:text-slate-300">
+              Y
+            </div>
+          ) : (
+            <div className="flex items-center font-mono font-bold text-xl cursor-pointer select-none group px-2" title={navTitleText}>
+              <span className="text-blue-500 dark:text-blue-400 mr-2">~/</span>
+              <span className="text-slate-700 dark:text-slate-200 tracking-tight">Y-Nav</span>
+              <span className="w-2.5 h-5 bg-emerald-500 ml-1 animate-pulse"></span>
+            </div>
+          )}
         </div>
         <button
           onClick={onToggleCollapsed}
@@ -66,11 +74,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={onSelectAll}
           title="置顶网站"
-          className={`relative rounded-xl transition-all ${isSidebarCollapsed ? 'w-full flex items-center justify-center px-2 py-3' : 'w-full flex items-center gap-3 px-4 py-3'} ${
-            selectedCategory === 'all'
-              ? 'bg-slate-100/60 dark:bg-white/5 text-slate-900 dark:text-slate-100 font-medium'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50/70 dark:hover:bg-white/5'
-          }`}
+          className={`relative rounded-xl transition-all ${isSidebarCollapsed ? 'w-full flex items-center justify-center px-2 py-3' : 'w-full flex items-center gap-3 px-4 py-3'} ${selectedCategory === 'all'
+            ? 'bg-slate-100/60 dark:bg-white/5 text-slate-900 dark:text-slate-100 font-medium'
+            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50/70 dark:hover:bg-white/5'
+            }`}
         >
           {!isSidebarCollapsed && selectedCategory === 'all' && (
             <span className="absolute left-2 top-1/2 -translate-y-1/2 h-6 w-1 rounded-full bg-accent"></span>
@@ -150,19 +157,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] px-1 mt-2 text-slate-400">
-            <span>本地保存 + WebDAV 备份</span>
-            <a
-              href={repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-              title="Fork this project on GitHub"
-            >
-              <GitFork size={14} />
-              <span>Fork 项目 v1.7</span>
-            </a>
-          </div>
+
         </div>
       )}
     </aside>
