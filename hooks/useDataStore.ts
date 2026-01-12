@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { LinkItem, Category, DEFAULT_CATEGORIES, INITIAL_LINKS } from '../types';
 import { arrayMove } from '@dnd-kit/sortable';
-
-const LOCAL_STORAGE_KEY = 'cloudnav_data_cache';
-const FAVICON_CACHE_KEY = 'cloudnav_favicon_cache';
+import { LOCAL_STORAGE_KEY, FAVICON_CACHE_KEY } from '../utils/constants';
 
 export const useDataStore = () => {
     const [links, setLinks] = useState<LinkItem[]>([]);
