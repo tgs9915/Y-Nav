@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Moon, Sun, Menu, Monitor, Settings, GripVertical, Save, X, MoreHorizontal, LayoutGrid, List } from 'lucide-react';
+import { Search, Moon, Sun, Menu, Monitor, Settings, GripVertical, Save, X, MoreHorizontal, LayoutGrid, List, CheckCircle } from 'lucide-react';
 import { ExternalSearchSource, SearchMode } from '../types';
 
 interface MainHeaderProps {
@@ -277,21 +277,24 @@ const MainHeader: React.FC<MainHeaderProps> = ({
           {/* Sort Controls */}
           {showSortControls && (
             isSorting ? (
-              <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30">
-                <span className="text-xs font-medium text-amber-600 dark:text-amber-400 mr-1">排序中</span>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+                <span className="text-xs font-bold text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                  正在排序
+                </span>
+                <div className="w-px h-3 bg-slate-200 dark:bg-slate-700 mx-1"></div>
                 <button
                   onClick={isSortingPinned ? onSavePinnedSorting : onSaveCategorySorting}
-                  className="p-1 rounded bg-accent text-white hover:bg-accent/90"
-                  title="保存"
+                  className="p-1 rounded-full text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 hover:scale-105 transition-all"
+                  title="保存排序"
                 >
-                  <Save size={14} />
+                  <CheckCircle size={16} />
                 </button>
                 <button
                   onClick={isSortingPinned ? onCancelPinnedSorting : onCancelCategorySorting}
-                  className="p-1 rounded bg-slate-500 text-white hover:bg-slate-600"
+                  className="p-1 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 hover:scale-105 transition-all"
                   title="取消"
                 >
-                  <X size={14} />
+                  <X size={16} />
                 </button>
               </div>
             ) : (

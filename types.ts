@@ -22,6 +22,8 @@ export interface SiteSettings {
   navTitle: string;
   favicon: string;
   cardStyle: 'detailed' | 'simple';
+  accentColor?: string; // RGB values e.g. "99 102 241"
+  grayScale?: 'slate' | 'zinc' | 'neutral'; // Background tone
 }
 
 export interface AppState {

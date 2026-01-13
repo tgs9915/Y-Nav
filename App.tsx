@@ -307,9 +307,23 @@ function App() {
     }
   }, [setPrefillLink, setEditingLink, openAddLinkModal]);
 
+  // === Appearance Setup ===
+  useEffect(() => {
+    if (siteSettings.accentColor) {
+      document.documentElement.style.setProperty('--accent-color', siteSettings.accentColor);
+    }
+  }, [siteSettings.accentColor]);
+
+  const toneClasses = useMemo(() => {
+    const tone = siteSettings.grayScale;
+    if (tone === 'zinc') return { bg: 'bg-zinc-50 dark:bg-zinc-950', text: 'text-zinc-900 dark:text-zinc-50' };
+    if (tone === 'neutral') return { bg: 'bg-neutral-50 dark:bg-neutral-950', text: 'text-neutral-900 dark:text-neutral-50' };
+    return { bg: 'bg-slate-50 dark:bg-slate-950', text: 'text-slate-900 dark:text-slate-50' };
+  }, [siteSettings.grayScale]);
+
   // === Render ===
   return (
-    <div className="flex h-screen overflow-hidden text-slate-900 dark:text-slate-50">
+    <div className={`flex h-screen overflow-hidden ${toneClasses.text}`}>
       {/* Modals */}
       <CategoryManagerModal
         isOpen={isCatManagerOpen}
@@ -389,7 +403,7 @@ function App() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-slate-50 dark:bg-slate-950">
+      <main className={`flex-1 flex flex-col h-full overflow-hidden relative ${toneClasses.bg}`}>
         <div className="absolute inset-0 pointer-events-none">
           {/* Light Mode Background */}
           <div className="absolute inset-0 bg-[#f8fafc] dark:hidden">
@@ -405,7 +419,7 @@ function App() {
             className="absolute inset-0 hidden dark:block"
             style={{
               backgroundImage:
-                'radial-gradient(680px 420px at 12% 18%, rgba(16,185,129,0.16), transparent 62%), radial-gradient(560px 360px at 86% 12%, rgba(56,189,248,0.18), transparent 60%), radial-gradient(820px 520px at 50% 90%, rgba(99,102,241,0.12), transparent 70%)'
+                'radial-gradient(680px 420px at 12% 18%, rgb(var(--accent-color) / 0.15), transparent 62%), radial-gradient(560px 360px at 86% 12%, rgba(56,189,248,0.18), transparent 60%), radial-gradient(820px 520px at 50% 90%, rgb(var(--accent-color) / 0.10), transparent 70%)'
             }}
           ></div>
           <div
