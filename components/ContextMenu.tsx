@@ -76,7 +76,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       onClick: () => { },
       hasSubmenu: true
     },
-    { icon: QrCode, label: '显示二维码', onClick: onShowQRCode },
     { icon: Edit2, label: '编辑链接', onClick: onEditLink },
     { icon: Pin, label: '置顶/取消置顶', onClick: onTogglePin },
     { icon: Trash2, label: '删除链接', onClick: onDeleteLink, className: 'text-red-500 dark:text-red-400' }

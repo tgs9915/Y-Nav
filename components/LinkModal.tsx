@@ -282,136 +282,169 @@ const LinkModal: React.FC<LinkModalProps> = ({ isOpen, onClose, onSave, onDelete
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-200 dark:border-slate-700">
-        <div className="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity duration-300">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 dark:border-slate-800 transition-transform duration-300">
+        {/* Header */}
+        <div className="flex justify-between items-center px-6 py-5 border-b border-slate-100 dark:border-slate-800/50">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+            {initialData ? '编辑链接' : '添加新链接'}
+          </h3>
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold dark:text-white">
-              {initialData ? '编辑链接' : '添加新链接'}
-            </h3>
-            <button
-              type="button"
-              onClick={() => setPinned(!pinned)}
-              className={`flex items-center gap-1 px-2 py-1 rounded-md border transition-all ${pinned
-                  ? 'bg-blue-100 border-blue-200 text-blue-600 dark:bg-blue-900/40 dark:border-blue-800 dark:text-blue-300'
-                  : 'bg-slate-50 border-slate-200 text-slate-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-400'
-                }`}
-              title={pinned ? "取消置顶" : "置顶"}
-            >
-              <Pin size={14} className={pinned ? "fill-current" : ""} />
-              <span className="text-xs font-medium">置顶</span>
-            </button>
             {!initialData && (
-              <div className="flex items-center gap-1 px-2 py-1 rounded-md border bg-slate-50 border-slate-200 dark:bg-slate-700 dark:border-slate-600">
-                <input
-                  type="checkbox"
-                  id="batchMode"
-                  checked={batchMode}
-                  onChange={(e) => setBatchMode(e.target.checked)}
-                  className="h-3 w-3 text-blue-600 focus:ring-blue-500 border-slate-300 rounded dark:border-slate-600 dark:bg-slate-700"
-                />
-                <label htmlFor="batchMode" className="text-xs font-medium text-slate-500 dark:text-slate-400 cursor-pointer">
-                  批量添加不关窗口
-                </label>
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                onClick={() => setBatchMode(!batchMode)}
+              >
+                <div className={`w-2 h-2 rounded-full ${batchMode ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600'}`} />
+                <span className="text-xs font-medium text-slate-600 dark:text-slate-400 select-none">
+                  {batchMode ? '批量模式已开' : '批量模式'}
+                </span>
               </div>
             )}
-            {initialData && onDelete && (
-              <button
-                type="button"
-                onClick={handleDelete}
-                className={`flex items-center gap-1 px-2 py-1 rounded-md border transition-all ${'bg-red-50 border-red-200 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:border-red-800/30 dark:text-red-400 dark:hover:bg-red-900/30'
-                  }`}
-                title="删除链接"
-              >
-                <Trash2 size={14} />
-                <span className="text-xs font-medium">删除</span>
-              </button>
-            )}
+
+            <button
+              onClick={onClose}
+              className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+            >
+              <X size={20} strokeWidth={2} />
+            </button>
           </div>
-          <button onClick={onClose} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors">
-            <X className="w-5 h-5 dark:text-slate-400" />
-          </button>
         </div>
 
-        <form onSubmit={handleSave} className="p-4 space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-slate-300">标题</label>
-            <input
-              type="text"
-              required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-              placeholder="网站名称"
-            />
+        <form onSubmit={handleSave} className="p-6 space-y-5">
+          {/* Top Actions Row: Pin & Delete */}
+          <div className="flex items-center justify-between">
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setPinned(!pinned)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border ${pinned
+                    ? 'bg-amber-50 border-amber-200 text-amber-600 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400'
+                    : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-750'
+                  }`}
+              >
+                <Pin size={13} className={pinned ? "fill-current" : ""} />
+                {pinned ? '已置顶' : '置顶'}
+              </button>
+
+              {initialData && onDelete && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border bg-slate-50 border-slate-200 text-slate-500 hover:bg-red-50 hover:border-red-200 hover:text-red-600 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:border-red-800/30 dark:hover:text-red-400"
+                >
+                  <Trash2 size={13} />
+                  删除
+                </button>
+              )}
+            </div>
+
+            {/* Category Select - Compact */}
+            <div className="relative min-w-[120px]">
+              <select
+                value={categoryId}
+                onChange={(e) => setCategoryId(e.target.value)}
+                className="w-full appearance-none pl-3 pr-8 py-1.5 text-xs font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 cursor-pointer"
+              >
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-slate-300">URL 链接</label>
-            <div className="flex gap-2">
+          <div className="space-y-4">
+            {/* Title Input */}
+            <div>
+              <input
+                type="text"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm font-medium"
+                placeholder="网站标题"
+              />
+            </div>
+
+            {/* URL Input */}
+            <div>
               <input
                 type="text"
                 required
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                placeholder="example.com 或 https://..."
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm font-medium font-mono"
+                placeholder="https://example.com"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-slate-300">图标</label>
-            <div className="space-y-2">
-              {/* 图标预览和输入框 */}
-              <div className="flex gap-2">
-                {icon && (
-                  <div className="w-10 h-10 rounded-lg border border-slate-300 dark:border-slate-600 overflow-hidden flex-shrink-0 bg-white dark:bg-slate-700">
-                    <img
-                      src={icon}
-                      alt="图标预览"
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
+            {/* Icon Section */}
+            <div className="flex gap-3 items-start">
+              <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden shrink-0 shadow-sm p-2">
+                {icon ? (
+                  <img
+                    src={icon}
+                    alt="Icon"
+                    className="w-full h-full object-contain"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                ) : (
+                  <div className="text-slate-300 dark:text-slate-600">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                   </div>
                 )}
-                <input
-                  type="text"
-                  value={icon}
-                  onChange={(e) => setIcon(e.target.value)}
-                  className="flex-1 p-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                  placeholder="https://example.com/icon.png 或 Base64"
-                />
               </div>
 
-              {/* 操作按钮 */}
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={handleFetchIcon}
-                  disabled={!url || isFetchingIcon}
-                  className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center gap-2 transition-colors"
-                  title="从URL自动获取图标"
-                >
-                  {isFetchingIcon ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Wand2 className="w-4 h-4" />
-                  )}
-                  <span>获取图标</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={handleUploadClick}
-                  disabled={isFetchingIcon}
-                  className="flex-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 flex items-center justify-center gap-2 transition-colors"
-                  title="上传本地图标文件"
-                >
-                  <Upload className="w-4 h-4" />
-                  <span>上传图标</span>
-                </button>
+              <div className="flex-1 space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={icon}
+                    onChange={(e) => setIcon(e.target.value)}
+                    className="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-600 dark:text-slate-300 placeholder:text-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-mono"
+                    placeholder="图标链接..."
+                  />
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={handleFetchIcon}
+                      disabled={!url || isFetchingIcon}
+                      className="p-2 bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="自动获取"
+                    >
+                      {isFetchingIcon ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleUploadClick}
+                      className="p-2 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                      title="上传"
+                    >
+                      <Upload size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="checkbox"
+                      id="autoFetchIcon"
+                      checked={autoFetchIcon}
+                      onChange={(e) => setAutoFetchIcon(e.target.checked)}
+                      className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700"
+                    />
+                    <label htmlFor="autoFetchIcon" className="text-[10px] text-slate-500 dark:text-slate-400 select-none cursor-pointer">
+                      输入链接时自动获取
+                    </label>
+                  </div>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500">支持 SVG, PNG, ICO</span>
+                </div>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -420,74 +453,46 @@ const LinkModal: React.FC<LinkModalProps> = ({ isOpen, onClose, onSave, onDelete
                   className="hidden"
                 />
               </div>
+            </div>
 
-              {/* 复选框和提示 */}
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="autoFetchIcon"
-                  checked={autoFetchIcon}
-                  onChange={(e) => setAutoFetchIcon(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded dark:border-slate-600 dark:bg-slate-700"
-                />
-                <label htmlFor="autoFetchIcon" className="text-sm text-slate-700 dark:text-slate-300">
-                  自动获取URL链接的图标
-                </label>
+            {/* Description */}
+            <div className="relative">
+              <div className="absolute right-3 top-3">
+                {(title && url) && (
+                  <button
+                    type="button"
+                    onClick={handleAIAssist}
+                    disabled={isGenerating}
+                    className="flex items-center gap-1 text-[10px] font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors bg-purple-50 dark:bg-purple-900/20 px-2 py-1 rounded-md"
+                  >
+                    {isGenerating ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                    {isGenerating ? '生成中...' : 'AI 填写'}
+                  </button>
+                )}
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                💡 支持上传 SVG、PNG、JPG、ICO 格式,文件大小限制 2MB
-              </p>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm min-h-[80px] resize-none"
+                placeholder="添加描述..."
+              />
             </div>
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="block text-sm font-medium dark:text-slate-300">描述 (选填)</label>
-              {(title && url) && (
-                <button
-                  type="button"
-                  onClick={handleAIAssist}
-                  disabled={isGenerating}
-                  className="text-xs flex items-center gap-1 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
-                >
-                  {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                  AI 自动填写
-                </button>
-              )}
-            </div>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all h-20 resize-none"
-              placeholder="简短描述..."
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-slate-300">分类</label>
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-            >
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
-              ))}
-            </select>
           </div>
 
           <div className="pt-2 relative">
-            {/* 成功提示 */}
             {showSuccessMessage && (
-              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 z-10 px-4 py-2 bg-green-500 text-white rounded-lg shadow-lg transition-opacity duration-300">
-                添加成功
+              <div className="absolute -top-12 left-0 right-0 mx-auto w-fit z-10 px-4 py-2 bg-emerald-500 text-white text-xs font-bold rounded-full shadow-lg flex items-center gap-1.5 animate-in fade-in slide-in-from-bottom-2">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                保存成功
               </div>
             )}
+
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-2.5 px-4 rounded-xl transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 active:scale-[0.98]"
+              className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3.5 px-4 rounded-xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-lg shadow-slate-200 dark:shadow-none active:scale-[0.99] text-sm flex items-center justify-center gap-2"
             >
-              保存
+              <span>保存链接</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
             </button>
           </div>
         </form>
