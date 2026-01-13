@@ -38,42 +38,79 @@ const Sidebar: React.FC<SidebarProps> = ({
   onOpenBackup,
   onOpenSettings
 }) => {
-  const [displayText, setDisplayText] = React.useState('Nav');
-  const [isDeleting, setIsDeleting] = React.useState(false);
+  // 状态机：'typing' | 'pausing' | 'deleting'
+  const [phase, setPhase] = React.useState<'typing' | 'pausing' | 'deleting'>('typing');
+  const [targetText, setTargetText] = React.useState('Nav'); // 当前要显示的目标文本
+  const [displayText, setDisplayText] = React.useState(''); // 实际显示的文本
 
+  // 核心打字机逻辑
   React.useEffect(() => {
     let timeout: NodeJS.Timeout;
-    const fullText = 'Nav';
 
-    if (isDeleting) {
+    const typeSpeed = 150;
+    const deleteSpeed = 100;
+    const navPause = 5000; // Nav 停留较久
+    const timePauseMin = 3000;
+    const timePauseMax = 6000; // 时间停留 3-6秒
+
+    const getCurrentTime = () => {
+      const now = new Date();
+      return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    };
+
+    const getCurrentDate = () => {
+      const now = new Date();
+      return `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    };
+
+    if (phase === 'typing') {
+      if (displayText !== targetText) {
+        // 继续打字
+        timeout = setTimeout(() => {
+          setDisplayText(targetText.slice(0, displayText.length + 1));
+        }, typeSpeed);
+      } else {
+        // 打字完成，进入停留
+        setPhase('pausing');
+      }
+    } else if (phase === 'pausing') {
+      // 决定停留多久
+      let delay = navPause;
+      if (targetText !== 'Nav') {
+        // 如果是时间，停留 3-6 秒
+        delay = Math.floor(Math.random() * (timePauseMax - timePauseMin + 1)) + timePauseMin;
+      }
+
+      timeout = setTimeout(() => {
+        setPhase('deleting');
+      }, delay);
+    } else if (phase === 'deleting') {
       if (displayText.length > 0) {
-        // Continue deleting
+        // 继续删除
         timeout = setTimeout(() => {
           setDisplayText(prev => prev.slice(0, -1));
-        }, 100);
+        }, deleteSpeed);
       } else {
-        // Finished deleting, switch to typing after pause
-        timeout = setTimeout(() => {
-          setIsDeleting(false);
-        }, 200);
-      }
-    } else {
-      if (displayText.length < fullText.length) {
-        // Continue typing
-        timeout = setTimeout(() => {
-          setDisplayText(fullText.slice(0, displayText.length + 1));
-        }, 150);
-      } else {
-        // Finished typing, wait random time before deleting
-        const randomDelay = Math.floor(Math.random() * 5000) + 5000; // 5-10s
-        timeout = setTimeout(() => {
-          setIsDeleting(true);
-        }, randomDelay);
+        // 删除完毕，决定下一个文本
+        let nextText = 'Nav';
+
+        if (targetText === 'Nav') {
+          // 当前是 Nav，准备切换到其他信息
+          // 20% 概率显示日期，80% 显示时间
+          const showDate = Math.random() < 0.2;
+          nextText = showDate ? getCurrentDate() : getCurrentTime();
+        } else {
+          // 当前是时间或日期，切回 Nav
+          nextText = 'Nav';
+        }
+
+        setTargetText(nextText);
+        setPhase('typing');
       }
     }
 
     return () => clearTimeout(timeout);
-  }, [displayText, isDeleting]);
+  }, [displayText, phase, targetText]);
 
   return (
     <aside
@@ -96,11 +133,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             </button>
           ) : (
             <div className="relative flex items-center justify-center font-mono font-bold text-lg cursor-pointer select-none group" title={navTitleText}>
-              {/* Ghost element for layout sizing (holds the full width) */}
+              {/* Ghost element for layout sizing (holds the widest possible width) */}
               <div className="flex items-center opacity-0 pointer-events-none" aria-hidden="true">
                 <span className="mr-1.5">~/</span>
                 <span className="tracking-tight">Y-</span>
-                <span className="tracking-tight">Nav</span>
+                <span className="tracking-tight">00:00</span>
                 <span className="w-2.5 ml-1"></span>
               </div>
 
