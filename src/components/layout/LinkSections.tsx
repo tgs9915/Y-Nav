@@ -1,7 +1,7 @@
 import React from 'react';
 import { DndContext, DragEndEvent, closestCorners, SensorDescriptor } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
-import { Pin, Trash2, CheckSquare, Upload, Search } from 'lucide-react';
+import { Pin, Trash2, CheckSquare, Upload, Search, X } from 'lucide-react';
 import { Category, LinkItem } from '../../types';
 import Icon from '../ui/Icon';
 import LinkCard from '../ui/LinkCard';
@@ -26,6 +26,7 @@ interface LinkSectionsProps {
   onDragEnd: (event: DragEndEvent) => void;
   onToggleBatchEditMode: () => void;
   onBatchDelete: () => void;
+  onBatchPin: () => void;
   onSelectAll: () => void;
   onBatchMove: (targetCategoryId: string) => void;
   onAddLink: () => void;
@@ -81,6 +82,7 @@ const LinkSections: React.FC<LinkSectionsProps> = ({
   onDragEnd,
   onToggleBatchEditMode,
   onBatchDelete,
+  onBatchPin,
   onSelectAll,
   onBatchMove,
   onAddLink,
@@ -214,22 +216,35 @@ const LinkSections: React.FC<LinkSectionsProps> = ({
 
               {/* Batch Edit Controls */}
               {selectedCategory !== 'all' && !isSortingMode && (
-                <div className="flex gap-2">
-                  <button
-                    onClick={onToggleBatchEditMode}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 ${isBatchEditMode
-                      ? 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500/50'
-                      : 'border border-slate-200/60 dark:border-slate-700/60 text-slate-600 dark:text-slate-400 hover:text-accent hover:border-accent/50 focus:ring-accent/50'
-                      }`}
-                    title={isBatchEditMode ? '退出批量编辑' : '批量编辑'}
-                  >
-                    {isBatchEditMode ? '取消' : '批量编辑'}
-                  </button>
-                  {isBatchEditMode && (
-                    <>
+                <div className="flex items-center gap-2">
+                  {!isBatchEditMode ? (
+                    <button
+                      onClick={onToggleBatchEditMode}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 border border-slate-200/60 dark:border-slate-700/60 text-slate-600 dark:text-slate-400 hover:text-accent hover:border-accent/50 focus:ring-accent/50 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm"
+                      title="批量编辑"
+                    >
+                      批量编辑
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-full bg-white/70 dark:bg-slate-800/70 border border-slate-200/70 dark:border-slate-700/60 shadow-sm backdrop-blur-sm">
+                      <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                        批量编辑
+                      </span>
+                      <span className="text-xs text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                        已选 {selectedLinksCount}
+                      </span>
+                      <div className="w-px h-3 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+                      <button
+                        onClick={onBatchPin}
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-accent hover:bg-accent/10 transition-colors"
+                        title="批量置顶"
+                      >
+                        <Pin size={13} />
+                        <span>置顶</span>
+                      </button>
                       <button
                         onClick={onBatchDelete}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         title="批量删除"
                       >
                         <Trash2 size={13} />
@@ -237,7 +252,7 @@ const LinkSections: React.FC<LinkSectionsProps> = ({
                       </button>
                       <button
                         onClick={onSelectAll}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-accent hover:bg-accent/80 text-white text-xs font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50"
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100/70 dark:hover:bg-slate-700/60 transition-colors"
                         title="全选/取消全选"
                       >
                         <CheckSquare size={13} />
@@ -245,7 +260,7 @@ const LinkSections: React.FC<LinkSectionsProps> = ({
                       </button>
                       <div className="relative group">
                         <button
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100/70 dark:hover:bg-slate-700/60 transition-colors"
                           title="批量移动"
                         >
                           <Upload size={13} />
@@ -263,7 +278,14 @@ const LinkSections: React.FC<LinkSectionsProps> = ({
                           ))}
                         </div>
                       </div>
-                    </>
+                      <button
+                        onClick={onToggleBatchEditMode}
+                        className="p-1.5 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        title="退出批量编辑"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
                   )}
                 </div>
               )}

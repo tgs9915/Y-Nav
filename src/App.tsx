@@ -207,6 +207,7 @@ function App() {
     toggleLinkSelection,
     handleBatchDelete,
     handleBatchMove,
+    handleBatchPin,
     handleSelectAll
   } = useBatchEdit({
     links,
@@ -627,6 +628,7 @@ function App() {
             onDragEnd={handleDragEnd}
             onToggleBatchEditMode={toggleBatchEditMode}
             onBatchDelete={handleBatchDelete}
+            onBatchPin={handleBatchPin}
             onSelectAll={handleSelectAll}
             onBatchMove={handleBatchMove}
             onAddLink={openAddLinkModal}

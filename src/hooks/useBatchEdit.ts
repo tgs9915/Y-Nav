@@ -57,6 +57,43 @@ export function useBatchEdit({ links, categories, displayedLinks, updateData }: 
         setIsBatchEditMode(false);
     }, [selectedLinks, links, categories, updateData]);
 
+    const handleBatchPin = useCallback(() => {
+        if (selectedLinks.size === 0) {
+            alert('请先选择要置顶的链接');
+            return;
+        }
+
+        const maxPinnedOrder = links.reduce((max, link) => {
+            if (!link.pinned || link.pinnedOrder === undefined) return max;
+            return Math.max(max, link.pinnedOrder);
+        }, -1);
+
+        const selectedOrder = displayedLinks
+            .filter(link => selectedLinks.has(link.id) && !link.pinned)
+            .map(link => link.id);
+
+        let nextOrder = maxPinnedOrder + 1;
+        const orderMap = new Map<string, number>();
+        selectedOrder.forEach(id => {
+            orderMap.set(id, nextOrder);
+            nextOrder += 1;
+        });
+
+        if (orderMap.size === 0) {
+            alert('所选链接已置顶');
+            return;
+        }
+
+        const newLinks = links.map(link => {
+            const order = orderMap.get(link.id);
+            if (order === undefined) return link;
+            return { ...link, pinned: true, pinnedOrder: order };
+        });
+
+        updateData(newLinks, categories);
+        setSelectedLinks(new Set());
+    }, [selectedLinks, links, categories, updateData, displayedLinks]);
+
     const handleSelectAll = useCallback(() => {
         const currentLinkIds = displayedLinks.map(link => link.id);
 
@@ -74,6 +111,7 @@ export function useBatchEdit({ links, categories, displayedLinks, updateData }: 
         toggleLinkSelection,
         handleBatchDelete,
         handleBatchMove,
+        handleBatchPin,
         handleSelectAll
     };
 }
